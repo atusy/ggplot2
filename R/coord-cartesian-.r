@@ -119,10 +119,12 @@ CoordCartesian <- ggproto("CoordCartesian", Coord,
 scale_range <- function(scale, limits = NULL, expand = TRUE) {
   expansion <- if (expand) expand_default(scale) else c(0, 0)
 
-  if (is.null(limits)) {
-    scale$dimension(expansion)
-  } else {
-    range <- range(scale$transform(limits))
-    expand_range(range, expansion[1], expansion[2])
+  if(is.null(limits)) return(scale$dimension(expansion))
+
+  if(length(limits) == 2) {
+    limits <- ifelse(is.na(limits), scale$dimension(c(0, 0)), limits)
   }
+
+  range <- range(scale$transform(limits))
+  expand_range(range, expansion[1], expansion[2])
 }
